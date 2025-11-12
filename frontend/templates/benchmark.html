@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Benchmark Results</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+  <header>
+    <div class="hdr-left">
+      <h1>📈 Benchmark Dashboard</h1>
+    </div>
+    <nav class="hdr-nav" aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="/benchmark">Benchmark</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="benchmark-container" role="region" aria-labelledby="benchmark-heading">
+        <h2 id="benchmark-heading">💡 Comparative Metrics</h2>
+        <p class="benchmark-subtitle" id="benchmark-desc">
+          Compare platforms by cost, latency, and efficiency. Use the tabs to switch views.
+        </p>
+
+        <div class="benchmark-controls" role="tablist" aria-describedby="benchmark-desc">
+          <div class="benchmark-buttons">
+            <button class="bbtn active" id="showGraphBtn" role="tab" aria-selected="true" aria-controls="chartPanel" title="Visual comparison of cost, latency and efficiency">Chart</button>
+            <button class="bbtn" id="showConfusionBtn" role="tab" aria-selected="false" aria-controls="confusionContainer" title="True/False positives and negatives">Confusion Matrix</button>
+            <button class="bbtn" id="showMetricsBtn" role="tab" aria-selected="false" aria-controls="metricsContainer" title="Precision, recall, F1, accuracy">Metrics</button>
+          </div>
+          <div class="metric-toggle" role="group" aria-label="Select metric to display">
+            <button class="bbtn sm active" id="metricEfficiencyBtn" aria-pressed="true" title="Show Efficiency (%)">Efficiency</button>
+            <button class="bbtn sm" id="metricCostBtn" aria-pressed="false" title="Show Cost ($)">Cost</button>
+            <button class="bbtn sm" id="metricLatencyBtn" aria-pressed="false" title="Show Latency (ms)">Latency</button>
+          </div>
+        </div>
+
+      <div class="benchmark-display" aria-live="polite">
+          <div id="chartPanel" style="height:420px;">
+            <canvas id="benchmarkChart" aria-label="Benchmark chart comparing cost and latency" role="img"></canvas>
+          </div>
+
+          <div id="summaryPanel" class="summary-panel" aria-label="Summary statistics" hidden></div>
+
+          <div id="errorToast" class="error-toast" role="alert" hidden></div>
+
+        <div id="confusionContainer" style="display:none; margin-top:12px;"></div>
+        <div id="metricsContainer" style="display:none; margin-top:12px;"></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="{{ url_for('static', filename='benchmark.js') }}"></script>
+</body>
+</html>

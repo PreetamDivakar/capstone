@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hybrid Cloud Orchestrator</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+  <!-- Fixed Header -->
+  <header>
+    <div class="hdr-left">
+      <h1>☁️ Hybrid Cloud Orchestrator</h1>
+    </div>
+    <nav class="hdr-nav" aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="/benchmark">Benchmark</a>
+    </nav>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <div class="container">
+
+      <!-- Left: Input Box -->
+      <section class="input-box" aria-labelledby="workload-heading">
+        <h2 id="workload-heading">⚙️ Workload Input</h2>
+        <p class="note">All fields marked with <span class="required">*</span> are mandatory.</p>
+
+        <div class="input-grid">
+          <label>CPU Cores <span class="required">*</span>
+            <input id="cpu_cores" type="number" step="0.01" min="0" required>
+          </label>
+          <label>Memory (MB) <span class="required">*</span>
+            <input id="memory_mb" type="number" min="0" required>
+          </label>
+          <label>Latency Sensitive (0/1) <span class="required">*</span>
+            <input id="latency_sensitive" type="number" min="0" max="1" required>
+          </label>
+          <label>Execution Time (s) <span class="required">*</span>
+            <input id="execution_time" type="number" min="0" required>
+          </label>
+          <label>Data Size (MB) <span class="required">*</span>
+            <input id="data_size_mb" type="number" min="0" required>
+          </label>
+        </div>
+
+        <div class="button-group">
+          <button id="btn-predict">🔮 Predict</button>
+          <button id="btn-preset-serverless">⚡ Serverless Preset</button>
+          <button id="btn-preset-traditional">🏢 Traditional Preset</button>
+          <button id="btn-reset">♻️ Reset</button>
+        </div>
+
+        <!-- (Kept for compatibility, but hidden — popup is used instead) -->
+        <div id="loader" class="hidden" role="status" aria-live="polite">
+          <div class="spinner" aria-hidden="true"></div>
+          <p>Processing...</p>
+        </div>
+      </section>
+
+      <!-- Right: Output Box -->
+      <section class="output-box" aria-labelledby="result-heading">
+        <h2 id="result-heading">🧾 Result</h2>
+        <div id="result" class="result-content" aria-live="polite" aria-atomic="true">
+          <p>Results will appear here after prediction.</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Processing popup (appears only when Predict is pressed).
+       Contains only the animation + single word "processing" -->
+  <div id="processing-popup" class="processing-popup hidden" role="status" aria-live="polite" aria-hidden="true">
+    <div class="processing-popup-inner" aria-hidden="false">
+      <div class="popup-spinner" aria-hidden="true"></div>
+      <div class="popup-text">processing</div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
