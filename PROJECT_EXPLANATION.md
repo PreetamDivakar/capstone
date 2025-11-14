@@ -3,25 +3,28 @@
 ## 📋 Table of Contents
 1. [Project Overview](#project-overview)
 2. [Core Purpose](#core-purpose)
-3. [Architecture & Components](#architecture--components)
+3. [Architecture & Components](#architecture-components)
 4. [Functionalities](#functionalities)
-5. [Installation & Setup](#installation--setup)
+5. [Installation & Setup](#installation-setup)
 6. [Running the Project](#running-the-project)
 7. [Testing the Project](#testing-the-project)
 8. [Project Workflow](#project-workflow)
-9. [Important Steps & Best Practices](#important-steps--best-practices)
-10. [Configuration](#configuration)
-11. [Notes](#notes)
-12. [Learning Outcomes](#learning-outcomes)
+9. [Important Steps & Best Practices](#important-steps-best-practices)
+10. [Key Features Summary](#key-features-summary)
+11. [Configuration](#configuration)
+12. [Notes](#notes)
+13. [Learning Outcomes](#learning-outcomes)
 
 ---
 
+<a name="project-overview"></a>
 ## 🎯 Project Overview
 
 The **Hybrid Cloud Orchestrator** is an intelligent decision-making system that analyzes workload characteristics and recommends the optimal deployment platform (Traditional Infrastructure vs. Serverless) based on cost, performance, and resource requirements. It combines machine learning models with rule-based heuristics to provide cost-effective cloud deployment recommendations.
 
 ---
 
+<a name="core-purpose"></a>
 ## 🎯 Core Purpose
 
 The project is designed to:
@@ -43,6 +46,7 @@ The project is designed to:
 
 ---
 
+<a name="architecture-components"></a>
 ## 🏗️ Architecture & Components
 
 ### Project Structure
@@ -84,6 +88,7 @@ hybrid-cloud-orchestrator/
 
 ---
 
+<a name="functionalities"></a>
 ## ⚙️ Functionalities
 
 ### 1. **Workload Prediction & Recommendation** (`/predict` endpoint)
@@ -521,6 +526,7 @@ Top Contributing Features:
 
 ---
 
+<a name="installation-setup"></a>
 ## 📦 Installation & Setup
 
 ### Prerequisites
@@ -559,6 +565,7 @@ Ensure the following files exist:
 
 ---
 
+<a name="running-the-project"></a>
 ## 🚀 Running the Project
 
 ### Option 1: Run the Web Application (Main Method)
@@ -632,6 +639,7 @@ python train_model.py --input ../data/workload_dataset_sample.csv --output orche
 
 ---
 
+<a name="testing-the-project"></a>
 ## 🧪 Testing the Project
 
 ### Run Unit Tests
@@ -744,6 +752,7 @@ curl http://127.0.0.1:5000/benchmark-data
 
 ---
 
+<a name="project-workflow"></a>
 ## 🔄 Project Workflow
 
 ### Complete Workflow (End-to-End)
@@ -828,6 +837,7 @@ curl http://127.0.0.1:5000/benchmark-data
 
 ---
 
+<a name="important-steps-best-practices"></a>
 ## 🔍 Important Steps & Best Practices
 
 ### **Data Quality Assurance**
@@ -1035,6 +1045,7 @@ grid_search.fit(X_train, y_train)
 
 ---
 
+<a name="key-features-summary"></a>
 ## 📊 Key Features Summary
 
 ✅ **Intelligent Platform Selection**: Rule-based + ML-ready architecture  
@@ -1047,6 +1058,7 @@ grid_search.fit(X_train, y_train)
 
 ---
 
+<a name="configuration"></a>
 ## 🔧 Configuration
 
 ### Cost Constants (in `backend/app.py`)
@@ -1077,6 +1089,7 @@ cost_ratio_threshold = 5.0       # ratio
 
 ---
 
+<a name="notes"></a>
 ## 📝 Notes
 
 - The current implementation uses **rule-based heuristics** for platform recommendation. The trained ML model exists but is not integrated into the prediction endpoint.
@@ -1086,6 +1099,7 @@ cost_ratio_threshold = 5.0       # ratio
 
 ---
 
+<a name="learning-outcomes"></a>
 ## 🎓 Learning Outcomes
 
 This project demonstrates:
