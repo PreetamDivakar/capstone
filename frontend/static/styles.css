@@ -114,7 +114,7 @@ main {
   background: linear-gradient(180deg, var(--card), rgba(10,14,18,0.9));
   border-radius: 12px;
   padding: 24px;
-  width: 420px;         /* slightly narrower */
+  width: 520px;         /* widened to keep buttons on one line */
   min-width: 320px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.6);
   border: 1px solid var(--border);
@@ -162,8 +162,12 @@ main {
 /* -------- Buttons -------- */
 .button-group {
   margin-top: 18px;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
+.button-row { display:flex; justify-content:center; align-items:center; gap:10px; flex-wrap:wrap; }
+.button-row.preset-row { flex-wrap: nowrap; }
 
 button {
   margin: 6px;
@@ -176,6 +180,9 @@ button {
   transition: transform .08s ease, box-shadow .08s ease;
   font-weight: 600;
 }
+
+#btn-predict { font-size: 1.05rem; }
+.button-row.preset-row button { font-size: 0.96rem; }
 
 button:hover {
   transform: translateY(-2px);
@@ -258,11 +265,24 @@ button:disabled {
 }
 
 .benchmark-controls { margin-top: 8px; }
-.benchmark-buttons { display:flex; gap:8px; flex-wrap:wrap; }
+.benchmark-buttons { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
 .bbtn { padding:8px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background:#0b1220; color:var(--muted); cursor:pointer; }
 .bbtn.active { background: linear-gradient(90deg, rgba(31,111,235,0.95), rgba(99,102,241,0.95)); color:#fff; border: none; }
 
-.benchmark-display { margin-top:12px; padding:12px; background:transparent; border-radius:8px; min-height:220px; }
+.benchmark-display { margin-top:12px; padding:12px; background:transparent; border-radius:8px; min-height:300px; }
+.panel { background: rgba(12,16,24,0.7); border:1px solid var(--border); border-radius:10px; padding:12px; }
+.chart-wrapper { height:360px; position:relative; }
+.metric-toggle { display:flex; justify-content:center; align-items:center; gap:10px; margin:8px 0 12px; flex-wrap:wrap; }
+.content-region { margin-top:12px; }
+.view-description-box { margin-top:12px; padding:12px; border-radius:10px; background: rgba(20,26,38,0.8); border:1px solid rgba(255,255,255,0.06); }
+.view-description { margin:0; color: var(--muted); line-height: 1.5; }
+
+/* Summary panel inside chart panel */
+.summary-panel { margin-top: 10px; }
+.summary-grid { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+.badge { background: var(--glass); border:1px solid var(--border); border-radius:10px; padding:10px 12px; min-width:150px; }
+.badge-title { color: var(--muted); font-size: 0.85rem; }
+.badge-value { color: var(--accent-2); font-weight: 800; font-size: 1.05rem; margin-top: 4px; text-align:center; }
 
 /* Confusion matrix table */
 .confusion-table { border-collapse: collapse; width:320px; margin:12px 0; }

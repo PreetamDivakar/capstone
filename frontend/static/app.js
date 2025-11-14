@@ -9,6 +9,42 @@ const loader = document.getElementById("loader"); // kept for compatibility (hid
 const allButtons = Array.from(document.querySelectorAll("button"));
 const predictBtn = document.getElementById("btn-predict");
 
+function collectPayloadFromInputs() {
+  const ids = ["cpu_cores","memory_mb","latency_sensitive","execution_time","data_size_mb"];
+  const values = ids.map(id => document.getElementById(id).value);
+  if (values.some(v => v === "")) {
+    alert("⚠️ Please fill all required fields before continuing!");
+    return null;
+  }
+
+  const [cpuRaw, memRaw, latencyRaw, timeRaw, sizeRaw] = values;
+  const cpu = parseFloat(cpuRaw);
+  const mem = parseFloat(memRaw);
+  const latency = parseInt(latencyRaw);
+  const time = parseFloat(timeRaw);
+  const size = parseFloat(sizeRaw);
+
+  if ([cpu, mem, latency, time, size].some(Number.isNaN)) {
+    alert("⚠️ Please enter valid numeric values.");
+    return null;
+  }
+  if ([cpu, mem, latency, time, size].some(v => v < 0)) {
+    alert("⚠️ Values cannot be negative.");
+    return null;
+  }
+  if (cpu === 0 && mem === 0 && latency === 0 && time === 0 && size === 0) {
+    alert("⚠️ All values are zero — please provide realistic workload parameters.");
+    return null;
+  }
+  return {
+    cpu_cores: cpu,
+    memory_mb: mem,
+    latency_sensitive: latency,
+    execution_time: time,
+    data_size_mb: size,
+  };
+}
+
 // Show processing popup (accessibility)
 function showProcessingPopup() {
   if (!processingPopup) return;
@@ -39,40 +75,8 @@ function wait(ms) { return new Promise(res => setTimeout(res, ms)); }
 
 // Main: send prediction but ensure popup stays visible at least 2000ms
 async function sendPrediction() {
-  // Input fields
-  const cpuRaw = document.getElementById("cpu_cores").value;
-  const memRaw = document.getElementById("memory_mb").value;
-  const latencyRaw = document.getElementById("latency_sensitive").value;
-  const timeRaw = document.getElementById("execution_time").value;
-  const sizeRaw = document.getElementById("data_size_mb").value;
-
-  // Validate presence
-  if ([cpuRaw, memRaw, latencyRaw, timeRaw, sizeRaw].some(v => v === "")) {
-    alert("⚠️ Please fill all required fields before predicting!");
-    return;
-  }
-
-  // Parse values
-  const cpu = parseFloat(cpuRaw);
-  const mem = parseFloat(memRaw);
-  const latency = parseInt(latencyRaw);
-  const time = parseFloat(timeRaw);
-  const size = parseFloat(sizeRaw);
-
-  if (Number.isNaN(cpu) || Number.isNaN(mem) || Number.isNaN(latency) || Number.isNaN(time) || Number.isNaN(size)) {
-    alert("⚠️ Please enter valid numeric values.");
-    return;
-  }
-
-  if (cpu < 0 || mem < 0 || latency < 0 || time < 0 || size < 0) {
-    alert("⚠️ Values cannot be negative.");
-    return;
-  }
-
-  if (cpu === 0 && mem === 0 && latency === 0 && time === 0 && size === 0) {
-    alert("⚠️ All values are zero — please provide realistic workload parameters.");
-    return;
-  }
+  const payload = collectPayloadFromInputs();
+  if (!payload) return;
 
   // Clear previous
   resultBox.innerHTML = "";
@@ -84,14 +88,6 @@ async function sendPrediction() {
   const t0 = Date.now();
 
   try {
-    const payload = {
-      cpu_cores: cpu,
-      memory_mb: mem,
-      latency_sensitive: latency,
-      execution_time: time,
-      data_size_mb: size,
-    };
-
     // Fire fetch in parallel with the minimum wait
     const fetchPromise = fetch("/predict", {
       method: "POST",
@@ -129,8 +125,8 @@ async function sendPrediction() {
     }
 
     // Format and display results
-    const cpuOut = data.cpu_cores ?? cpu;
-    const memOut = data.memory_mb ?? mem;
+    const cpuOut = data.cpu_cores ?? payload.cpu_cores;
+    const memOut = data.memory_mb ?? payload.memory_mb;
     const costTrad = (data.cost_traditional !== undefined) ? formatNum(data.cost_traditional, 6) : "-";
     const costSrv = (data.cost_serverless !== undefined) ? formatNum(data.cost_serverless, 6) : "-";
     const costRatio = (data.cost_ratio !== undefined && data.cost_ratio !== null) ? formatNum(data.cost_ratio, 3) : "-";
@@ -154,6 +150,51 @@ async function sendPrediction() {
     setButtonsDisabled(false);
     console.error(error);
     alert("❌ Error processing request. " + (error.message || ""));
+  }
+}
+
+async function triggerDeployBundle() {
+  const payload = collectPayloadFromInputs();
+  if (!payload) return;
+
+  showProcessingPopup();
+  setButtonsDisabled(true);
+  try {
+    const res = await fetch("/deploy", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      const errText = await res.text();
+      let message = errText;
+      try {
+        const parsed = JSON.parse(errText);
+        message = parsed.error || errText;
+      } catch (_) {
+        // no-op
+      }
+      throw new Error(message || res.statusText);
+    }
+    const blob = await res.blob();
+    const disposition = res.headers.get("Content-Disposition") || "";
+    let filename = "deploy_bundle.zip";
+    const match = disposition.match(/filename="?([^"]+)"?/i);
+    if (match && match[1]) filename = match[1];
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error(error);
+    alert("❌ Unable to generate deployment bundle. " + (error.message || ""));
+  } finally {
+    hideProcessingPopup();
+    setButtonsDisabled(false);
   }
 }
 
@@ -197,4 +238,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const resetBtn = document.getElementById("btn-reset");
   if (resetBtn) resetBtn.addEventListener('click', resetFields);
+
+  const deployBtn = document.getElementById("btn-deploy");
+  if (deployBtn) deployBtn.addEventListener('click', triggerDeployBundle);
 });

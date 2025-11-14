@@ -175,7 +175,11 @@ window.addEventListener('DOMContentLoaded', async () => {
   const confusionContainer = el('confusionContainer');
   const metricsContainer = el('metricsContainer');
   const chartPanel = el('chartPanel');
+  const confusionPanel = el('confusionPanel');
+  const metricsPanel = el('metricsPanel');
   const summaryPanel = el('summaryPanel');
+  const confusionDescription = el('confusionDescription');
+  const metricsDescription = el('metricsDescription');
 
   // Start by fetching benchmark data
   let data;
@@ -238,36 +242,56 @@ window.addEventListener('DOMContentLoaded', async () => {
     latency_ms: latArr
   });
 
-  // Default visibility
-  show(chartPanel, 'block'); // keep canvas visible initially
+  // Panel helpers
+  function activatePanel(panel) {
+    const panels = [chartPanel, confusionPanel, metricsPanel];
+    panels.forEach(p => {
+      if (!p) return;
+      const isActive = p === panel;
+      p.classList.toggle('active', isActive);
+      if (isActive) {
+        p.removeAttribute('hidden');
+        p.setAttribute('aria-hidden', 'false');
+      } else {
+        p.setAttribute('hidden', 'true');
+        p.setAttribute('aria-hidden', 'true');
+      }
+    });
+  }
+  // Default visibility: show chart panel
+  activatePanel(chartPanel);
   setHidden(summaryPanel, false);
-  hide(confusionContainer, metricsContainer);
+  setHidden(confusionDescription, true);
+  setHidden(metricsDescription, true);
 
   // Wire buttons
   if (showGraphBtn) {
     showGraphBtn.addEventListener('click', () => {
       setActive(showGraphBtn);
-      show(chartPanel, 'block');
+      activatePanel(chartPanel);
       setHidden(summaryPanel, false);
-      hide(confusionContainer, metricsContainer);
+      setHidden(confusionDescription, true);
+      setHidden(metricsDescription, true);
     });
   }
   if (showConfusionBtn) {
     showConfusionBtn.addEventListener('click', () => {
       setActive(showConfusionBtn);
-      hide(chartPanel, metricsContainer);
+      activatePanel(confusionPanel);
       setHidden(summaryPanel, true);
       renderConfusion(confusionContainer, cm);
-      show(confusionContainer, 'block');
+      setHidden(confusionDescription, false);
+      setHidden(metricsDescription, true);
     });
   }
   if (showMetricsBtn) {
     showMetricsBtn.addEventListener('click', () => {
       setActive(showMetricsBtn);
-      hide(chartPanel, confusionContainer);
+      activatePanel(metricsPanel);
       setHidden(summaryPanel, true);
       renderMetrics(metricsContainer, metrics);
-      show(metricsContainer, 'block');
+      setHidden(confusionDescription, true);
+      setHidden(metricsDescription, false);
     });
   }
 

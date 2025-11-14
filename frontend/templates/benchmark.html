@@ -28,27 +28,42 @@
         <div class="benchmark-controls" role="tablist" aria-describedby="benchmark-desc">
           <div class="benchmark-buttons">
             <button class="bbtn active" id="showGraphBtn" role="tab" aria-selected="true" aria-controls="chartPanel" title="Visual comparison of cost, latency and efficiency">Chart</button>
-            <button class="bbtn" id="showConfusionBtn" role="tab" aria-selected="false" aria-controls="confusionContainer" title="True/False positives and negatives">Confusion Matrix</button>
-            <button class="bbtn" id="showMetricsBtn" role="tab" aria-selected="false" aria-controls="metricsContainer" title="Precision, recall, F1, accuracy">Metrics</button>
-          </div>
-          <div class="metric-toggle" role="group" aria-label="Select metric to display">
-            <button class="bbtn sm active" id="metricEfficiencyBtn" aria-pressed="true" title="Show Efficiency (%)">Efficiency</button>
-            <button class="bbtn sm" id="metricCostBtn" aria-pressed="false" title="Show Cost ($)">Cost</button>
-            <button class="bbtn sm" id="metricLatencyBtn" aria-pressed="false" title="Show Latency (ms)">Latency</button>
+            <button class="bbtn" id="showConfusionBtn" role="tab" aria-selected="false" aria-controls="confusionPanel" title="True/False positives and negatives">Confusion Matrix</button>
+            <button class="bbtn" id="showMetricsBtn" role="tab" aria-selected="false" aria-controls="metricsPanel" title="Precision, recall, F1, accuracy">Metrics</button>
           </div>
         </div>
 
       <div class="benchmark-display" aria-live="polite">
-          <div id="chartPanel" style="height:420px;">
-            <canvas id="benchmarkChart" aria-label="Benchmark chart comparing cost and latency" role="img"></canvas>
+          <div id="chartPanel" class="panel">
+            <div class="metric-toggle" role="group" aria-label="Select metric to display">
+              <button class="bbtn sm active" id="metricEfficiencyBtn" aria-pressed="true" title="Show Efficiency (%)">Efficiency</button>
+              <button class="bbtn sm" id="metricCostBtn" aria-pressed="false" title="Show Cost ($)">Cost</button>
+              <button class="bbtn sm" id="metricLatencyBtn" aria-pressed="false" title="Show Latency (ms)">Latency</button>
+            </div>
+            <div class="chart-wrapper">
+              <canvas id="benchmarkChart" aria-label="Benchmark chart comparing cost and latency" role="img"></canvas>
+            </div>
+            <div id="summaryPanel" class="summary-panel" aria-label="Summary statistics" hidden></div>
           </div>
-
-          <div id="summaryPanel" class="summary-panel" aria-label="Summary statistics" hidden></div>
 
           <div id="errorToast" class="error-toast" role="alert" hidden></div>
 
-        <div id="confusionContainer" style="display:none; margin-top:12px;"></div>
-        <div id="metricsContainer" style="display:none; margin-top:12px;"></div>
+        <div id="confusionPanel" class="panel" hidden>
+          <div id="confusionContainer" class="content-region"></div>
+          <div class="view-description-box">
+            <p id="confusionDescription" class="view-description" hidden>
+              The confusion matrix summarizes classification performance: rows are actual outcomes, columns are predicted outcomes. True positives and true negatives indicate correct decisions, while false positives and false negatives show misclassifications.
+            </p>
+          </div>
+        </div>
+        <div id="metricsPanel" class="panel" hidden>
+          <div id="metricsContainer" class="content-region"></div>
+          <div class="view-description-box">
+            <p id="metricsDescription" class="view-description" hidden>
+              Precision, recall, F1 score, and accuracy highlight how reliable our predictions are. Precision focuses on correctness of positive predictions, recall measures coverage of actual positives, F1 balances both, and accuracy shows overall correctness.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   </main>

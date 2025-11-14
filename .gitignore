@@ -1,2 +1,4 @@
 Sample_Dataset.csv
 data/Sample_Dataset.csv
+__pycache__/
+*.pyc
