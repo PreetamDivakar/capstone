@@ -29,8 +29,11 @@ htmlcov/
 data/
 *.csv
 
-# Model files (optional - include if you want to use the ML model)
-# model/
+# Model files (not needed - app uses rule-based heuristics, not ML model)
+model/
+
+# Preprocessing files (not needed for deployment)
+preprocessing/
 
 # Development files
 tests/
