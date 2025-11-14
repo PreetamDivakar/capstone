@@ -345,9 +345,11 @@ def deploy_bundle():
             zf.writestr(name, content)
     mem_zip.seek(0)
 
-    platform_slug = (platform or "traditional").lower().replace(" ", "_")
-    timestamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
-    filename = f"deploy_bundle_{platform_slug}_{timestamp}.zip"
+    platform_slug = (platform or "traditional").lower().replace(" ", "-")
+    now = datetime.now(timezone.utc)
+    date_str = now.strftime('%Y%m%d')
+    time_str = now.strftime('%H%M%S')
+    filename = f"deploy-{platform_slug}-{date_str}-{time_str}.zip"
 
     return send_file(
         mem_zip,
